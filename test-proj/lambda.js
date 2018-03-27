@@ -36,27 +36,27 @@ exports.handler = function (event, context, callback) {
 			// 		}
 			// 	});
 			// }
-			ses.sendEmail({
-				Destination: {
-					ToAddresses: ['achal.rvce@gmail.com'],
-					CcAddresses: [],
-					BccAddresses: []
-				},
-				Message: {
-					Body: {
-						Text: {
-							Data: 'successful execution'.concat(JSON.stringify(json))
-						}
-					},
-					Subject: {
-						Data: 'report'
-					}
-				},
-				Source: 'achal.rvce@gmail.com',
-			}, function (err, data) {
-				if (err) console.log(err, err.stack); // an error occurred
-				else console.log(data);           // successful response
-			});
+			// ses.sendEmail({
+			// 	Destination: {
+			// 		ToAddresses: ['achal.rvce@gmail.com'],
+			// 		CcAddresses: [],
+			// 		BccAddresses: []
+			// 	},
+			// 	Message: {
+			// 		Body: {
+			// 			Text: {
+			// 				Data: 'successful execution'.concat(JSON.stringify(json))
+			// 			}
+			// 		},
+			// 		Subject: {
+			// 			Data: 'report'
+			// 		}
+			// 	},
+			// 	Source: 'achal.rvce@gmail.com',
+			// }, function (err, data) {
+			// 	if (err) console.log(err, err.stack); // an error occurred
+			// 	else console.log(data);           // successful response
+			// });
 
 		})
 		.catch(err => {
