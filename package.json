@@ -1,0 +1,9 @@
+{
+  "name": "test-proj",
+  "version": "1.0.0",
+  "dependencies": {
+    "aws-sdk": "2.176.0",
+    "@slappforge/slappforge-sdk": "0.0.3",
+    "axios": "0.18.0"
+  }
+}
