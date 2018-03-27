@@ -14,28 +14,27 @@ exports.handler = function (event, context, callback) {
 	axios
 		.get(url, config)
 		.then(response => {
-
 			// xml to json
-			var json = parser.toJson(response);
+			var json = parser.toJson(response.data);
 			console.log("to json -> %s", json);
 
 			if (json.Error) {
 				throw 'result not found';
 			}
-			// for (office of json.Offices ){
-			// 	ddb.put({
-			// 		TableName: 'integration_offices',
-			// 		Item: { 'vendor_org_id': office.vendor_org_id, 'super_org_id': '102' }
-			// 	}, function (err, data) {
-			// 		if (err) {
-			// 			//handle error
-			// 			console.log(err);
-			// 		} else {
-			// 			//your logic goes here
-			// 			console.log(data);
-			// 		}
-			// 	});
-			// }
+			for (office of json.OfficeList.Offices.Office ){
+				ddb.put({
+					TableName: 'integration_offices',
+					Item: { 'vendor_org_id': office.Key, 'office_name': office.OFFICENAME, 'email': office.Email, 'city': office.City }
+				}, function (err, data) {
+					if (err) {
+						//handle error
+						console.log(err);
+					} else {
+						//your logic goes here
+						//console.log(data);
+					}
+				});
+			}
 			// ses.sendEmail({
 			// 	Destination: {
 			// 		ToAddresses: ['achal.rvce@gmail.com'],
