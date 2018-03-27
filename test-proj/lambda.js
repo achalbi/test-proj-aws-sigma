@@ -15,8 +15,9 @@ exports.handler = function (event, context, callback) {
 		.get(url, config)
 		.then(response => {
 			// xml to json
-			var json = parser.toJson(response.data);
-			console.log("to json -> %s", json);
+			var jsonStr = parser.toJson(response.data);
+			console.log("to json -> %s", jsonStr);
+			var json = JSON.parse(jsonStr)
 
 			if (json.Error) {
 				throw 'result not found';
