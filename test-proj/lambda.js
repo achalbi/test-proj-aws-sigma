@@ -21,7 +21,12 @@ exports.handler = function (event, context, callback) {
 			if (json.Error) {
 				throw 'result not found';
 			}
-			for (office of json.OfficeList.Offices.Office ){
+			console.log(json);
+			console.log(json.OfficeList);
+
+			var offices = json.OfficeList.Offices.Office;
+
+			for (office of offices){
 				ddb.put({
 					TableName: 'integration_offices',
 					Item: { 'vendor_org_id': office.Key, 'office_name': office.OFFICENAME, 'email': office.Email, 'city': office.City }
