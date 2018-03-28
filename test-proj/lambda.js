@@ -53,9 +53,11 @@ exports.handler = function (event, context, callback) {
 						}).promise()
 							.then(data => {
 								// your code goes here
+								console.log("SNS: Message sent to:"+office.Key);
 							})
 							.catch(err => {
 								// error handling goes here
+								console.log("SNS: Message not sent - error");
 							});
 					}
 				});
