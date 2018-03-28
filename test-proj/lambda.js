@@ -40,26 +40,7 @@ exports.handler = function (event, context, callback) {
 						//your logic goes here
 						//console.log(data);
 						
-						sns.publish({
-							Message: 'office id is passed to fetch agents',
-							Subject: 'fetch_office_agents',
-							MessageAttributes: {
-								'office_id': {
-									DataType: 'Number',
-									StringValue: ""+office.Key
-								}
-							},
-							MessageStructure: 'String',
-							TopicArn: 'arn:aws:sns:us-east-1:629679895580:fetch_office_agents'
-						}).promise()
-							.then(data => {
-								// your code goes here
-								console.log("SNS: Message sent to:"+office.Key);
-							})
-							.catch(err => {
-								// error handling goes here
-								console.log("SNS: Message not sent - error");
-							});
+
 					}
 				});
 			}
