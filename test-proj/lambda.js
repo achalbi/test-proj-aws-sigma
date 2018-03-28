@@ -39,6 +39,7 @@ exports.handler = function (event, context, callback) {
 					} else {
 						//your logic goes here
 						//console.log(data);
+						
 						sns.publish({
 							Message: 'office id is passed to fetch agents',
 							Subject: 'fetch_office_agents',
