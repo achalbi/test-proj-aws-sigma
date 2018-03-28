@@ -1,4 +1,5 @@
 let AWS = require('aws-sdk');
+const sns = new AWS.SNS();
 const ses = new AWS.SES();
 const axios = require('axios');
 var parser = require('xml2json');
@@ -27,7 +28,7 @@ exports.handler = function (event, context, callback) {
 
 			var offices = json.OfficeList.Offices.Office;
 
-			for (office of offices){
+			for (office of offices) {
 				ddb.put({
 					TableName: 'integration_offices',
 					Item: { 'vendor_org_id': office.Key, 'office_name': office.OFFICENAME, 'email': office.Email, 'city': office.City }
@@ -38,9 +39,30 @@ exports.handler = function (event, context, callback) {
 					} else {
 						//your logic goes here
 						//console.log(data);
+						sns.publish({
+							Message: 'office id is passed to fetch agents',
+							Subject: 'fetch_office_agents',
+							MessageAttributes: {
+								'office_id': {
+									DataType: 'Number',
+									StringValue: ""+office.Key
+								}
+							},
+							MessageStructure: 'String',
+							TopicArn: 'arn:aws:sns:us-east-1:629679895580:fetch_office_agents'
+						}).promise()
+							.then(data => {
+								// your code goes here
+							})
+							.catch(err => {
+								// error handling goes here
+							});
 					}
 				});
 			}
+
+
+
 			// ses.sendEmail({
 			// 	Destination: {
 			// 		ToAddresses: ['achal.rvce@gmail.com'],
