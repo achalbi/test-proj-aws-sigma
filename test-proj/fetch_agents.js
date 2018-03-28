@@ -17,17 +17,17 @@ exports.handler = function (event, context, callback) {
 		.then(response => {
 			// xml to json
 			var jsonStr = parser.toJson(response.data);
-			console.log("to json -> %s", jsonStr);
+			//console.log("to json -> %s", jsonStr);
 			var json = JSON.parse(jsonStr)
 
 			if (json.Error) {
 				throw 'result not found';
 			}
-			console.log(json);
+			//console.log(json);
 
 			var agents = json.AgentList.Agents.Agent;
-			var total_pages = json.TotalPageNumber;
-
+			var total_pages = parseInt(json.TotalPageNumber);
+			console.log("total_pages:", total_pages);
 			for (agents of agents) {
 				ddb.put({
 					TableName: 'integration-alliance-agents',
@@ -43,13 +43,13 @@ exports.handler = function (event, context, callback) {
 			}
 
 			for (i = 2; i <= total_pages; i++) {
-
+				console.log("page no:", i);
 				axios
 					.get(url + i, config)
 					.then(response => {
 						// xml to json
 						var jsonStr = parser.toJson(response.data);
-						console.log("to json -> %s", jsonStr);
+						console.log("page no, inside:", i);
 						var json = JSON.parse(jsonStr)
 
 						if (json.Error) {
@@ -59,7 +59,7 @@ exports.handler = function (event, context, callback) {
 						var agents = json.AgentList.Agents.Agent;
 
 						for (agents of agents) {
-							console.log(agents);
+							//console.log(agents);
 							ddb.put({
 								TableName: 'integration-alliance-agents',
 								Item: { 'Key': agents.Key, 'email': agents.Email, 'firstName': agents.FirstName, 'lastName': agents.LastName, 'jobTitle': agents.Roles , 'vendor_org_id': agents.OfficeKey  }
