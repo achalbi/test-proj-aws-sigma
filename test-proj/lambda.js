@@ -39,7 +39,27 @@ exports.handler = function (event, context, callback) {
 					} else {
 						//your logic goes here
 						//console.log(data);
-						
+						sns.publish({
+							Message: 'publish office id',
+							Subject: 'publish office id',
+							MessageAttributes: {
+								'office_id': {
+									DataType: 'String',
+									StringValue: office.Key
+								}
+							},
+							MessageStructure: 'String',
+							TopicArn: 'arn:aws:sns:us-east-1:629679895580:sns_agent'
+						}).promise()
+							.then(data => {
+								// your code goes here
+								console.log("successful data SNS: ", data);
+							})
+							.catch(err => {
+								// error handling goes here
+								console.log("error: ", err);
+							});
+
 
 					}
 				});
