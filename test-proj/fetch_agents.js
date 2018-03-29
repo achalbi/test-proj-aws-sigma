@@ -26,13 +26,31 @@ exports.handler = function (event, context, callback) {
 			//console.log(json);
 
 			var agents = json.AgentList.Agents.Agent;
-			var total_pages = parseInt(json.TotalPageNumber);
-			console.log("total_pages:", total_pages);
-			for (agents of agents) {
-				ddb.put({
-					TableName: 'integration-alliance-agents',
-					Item: { 'Key': agents.Key, 'email': agents.Email, 'firstName': agents.FirstName, 'lastName': agents.LastName, 'jobTitle': agents.Roles , 'vendor_org_id': agents.OfficeKey  }
-				}, function (err, data) {
+			var total_pages = parseInt(json.AgentList.TotalPageNumber);
+			var all_agents = [];
+
+			for (agent of agents) {
+			item =	{
+					PutRequest: {
+						Item: { 
+							Key: agent.Key,
+							email: agent.Email,
+							firstName: agent.FirstName,
+							lastName: agent.LastName, 
+							jobTitle: agent.Roles, 
+							vendor_org_id: agent.OfficeKey  
+							}
+					}
+				}
+				all_agents.push(item);
+			}
+
+			var params = {
+				RequestItems: {
+					'integration-alliance-agents': all_agents
+				}
+			};
+				ddb.batchWrite(params, function (err, data) {
 					if (err) {
 						//handle error
 						console.log(err);
@@ -40,7 +58,7 @@ exports.handler = function (event, context, callback) {
 						//your logic goes here
 					}
 				});
-			}
+
 
 			for (i = 2; i <= total_pages; i++) {
 				console.log("page no:", i);
@@ -58,12 +76,30 @@ exports.handler = function (event, context, callback) {
 
 						var agents = json.AgentList.Agents.Agent;
 
-						for (agents of agents) {
-							//console.log(agents);
-							ddb.put({
-								TableName: 'integration-alliance-agents',
-								Item: { 'Key': agents.Key, 'email': agents.Email, 'firstName': agents.FirstName, 'lastName': agents.LastName, 'jobTitle': agents.Roles , 'vendor_org_id': agents.OfficeKey  }
-							}, function (err, data) {
+						var all_agents = [];
+
+						for (agent of agents) {
+						item =	{
+								PutRequest: {
+									Item: { 
+										Key: agent.Key,
+										email: agent.Email,
+										firstName: agent.FirstName,
+										lastName: agent.LastName, 
+										jobTitle: agent.Roles, 
+										vendor_org_id: agent.OfficeKey  
+										}
+								}
+							}
+							all_agents.push(item);
+						}
+
+						var params = {
+							RequestItems: {
+								'integration-alliance-agents': all_agents
+							}
+						};
+							ddb.batchWrite(params, function (err, data) {
 								if (err) {
 									//handle error
 									console.log(err);
@@ -71,8 +107,6 @@ exports.handler = function (event, context, callback) {
 									//your logic goes here
 								}
 							});
-
-						}
 
 					})
 					.catch(err => {
