@@ -29,6 +29,21 @@ exports.handler = function (event, context, callback) {
 			var total_pages = parseInt(json.AgentList.TotalPageNumber);
 			var all_agents = [];
 
+			ddb.put({
+					TableName: 'integration-alliance-agents',
+					Item: { 'Key': agents[0].Key, 
+							'email': agents[0].Email, 
+							'firstName': agents[0].FirstName, 
+							'lastName': agents[0].LastName, 
+							'jobTitle': agents[0].Roles, 
+							'vendor_org_id': agents[0].agent.OfficeKey }
+				}, function (err, data) {
+					if (err) {
+						//handle error
+						console.log(err);
+					} else {}
+				});
+
 			for (agent of agents) {
 			item =	{
 					PutRequest: {
